@@ -1,6 +1,6 @@
-package entities;
+package ru.yandex.practicum.entities;
 
-import common.TaskStatus;
+import ru.yandex.practicum.common.TaskStatus;
 
 public class SubTask extends Task{
     private int epicTaskId;

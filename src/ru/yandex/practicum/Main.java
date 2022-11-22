@@ -1,8 +1,13 @@
-import common.TaskStatus;
-import entities.EpicTask;
-import entities.SubTask;
-import entities.Task;
-import service.TasksManager;
+package ru.yandex.practicum;
+
+import ru.yandex.practicum.common.TaskStatus;
+import ru.yandex.practicum.entities.Epic;
+import ru.yandex.practicum.entities.SubTask;
+import ru.yandex.practicum.entities.Task;
+import ru.yandex.practicum.service.TasksManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -14,8 +19,8 @@ public class Main {
         tasksManager.createTask(new Task("задача 2", TaskStatus.NEW, "описание задачи 2"));
 
         System.out.println("Создание 2-x эпика.");
-        tasksManager.createEpicTask(new EpicTask("эпик 1", "описание эпика 1"));
-        tasksManager.createEpicTask(new EpicTask("эпик 2", "описание эпика 2"));
+        tasksManager.createEpicTask(new Epic("эпик 1", "описание эпика 1"));
+        tasksManager.createEpicTask(new Epic("эпик 2", "описание эпика 2"));
 
         System.out.println("Создание подзадач.");
         tasksManager.createSubTask(new SubTask("подзадача 1-1", TaskStatus.NEW, "описание подзадачи 1-1", 3));
@@ -29,14 +34,16 @@ public class Main {
         System.out.println("Список подзадач.");
         System.out.println(tasksManager.getAllSubTask());
 
-        System.out.print("Изменение статуса задачи 1.");
+        System.out.println("Изменение статуса задачи 1.");
         tasksManager.updateTask(new Task(1, "задача 1", TaskStatus.IN_PROGRESS, "описание задачи 1"));
-        System.out.print("Изменение статуса задачи 2.");
+        System.out.println("Изменение статуса задачи 2.");
         tasksManager.updateTask(new Task(2, "задача 2", TaskStatus.IN_PROGRESS, "описание задачи 2"));
-        System.out.print("Изменение статуса подзадачи 1-1.");
+        System.out.println("Изменение статуса подзадачи 1-1.");
         tasksManager.updateSubTask(new SubTask(5, "подзадача 1-1", TaskStatus.DONE, "описание подзадачи 1-1", 3));
-        System.out.print("Изменение статуса подзадачи 2-1.");
+        System.out.println("Изменение статуса подзадачи 2-1.");
         tasksManager.updateSubTask(new SubTask(7, "подзадача 2-1", TaskStatus.IN_PROGRESS, "описание подзадачи 2-1", 4));
+        System.out.println("Изменение эпика 2.");
+        tasksManager.updateEpicTask(new Epic(4, "эпик 2(new)", "описание эпика 2(new)", new ArrayList<>(List.of(7))));
 
         System.out.println("Список задач.");
         System.out.println(tasksManager.getAllTask());
