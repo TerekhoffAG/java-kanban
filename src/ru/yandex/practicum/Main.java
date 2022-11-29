@@ -1,10 +1,11 @@
 package ru.yandex.practicum;
 
+import ru.yandex.practicum.common.Managers;
 import ru.yandex.practicum.common.TaskStatus;
 import ru.yandex.practicum.entities.Epic;
 import ru.yandex.practicum.entities.SubTask;
 import ru.yandex.practicum.entities.Task;
-import ru.yandex.practicum.service.TasksManager;
+import ru.yandex.practicum.interfaces.TaskManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        TasksManager tasksManager = new TasksManager();
+        TaskManager tasksManager = Managers.getDefault();
 
         System.out.println("Создание 2-х задач.");
         tasksManager.createTask(new Task("задача 1", TaskStatus.NEW, "описание задачи 1"));
@@ -44,6 +45,20 @@ public class Main {
         tasksManager.updateSubTask(new SubTask(7, "подзадача 2-1", TaskStatus.IN_PROGRESS, "описание подзадачи 2-1", 4));
         System.out.println("Изменение эпика 2.");
         tasksManager.updateEpicTask(new Epic(4, "эпик 2(new)", "описание эпика 2(new)", new ArrayList<>(List.of(7))));
+
+        tasksManager.getTaskById(1);
+        tasksManager.getTaskById(2);
+        tasksManager.getTaskById(1);
+        tasksManager.getTaskById(2);
+        tasksManager.getTaskById(1);
+        tasksManager.getEpicTaskById(3);
+        tasksManager.getEpicTaskById(4);
+        tasksManager.getEpicTaskById(3);
+        tasksManager.getEpicTaskById(4);
+        tasksManager.getEpicTaskById(3);
+        tasksManager.getSubTaskById(7);
+        System.out.println("История просмотров задач.");
+        System.out.println(tasksManager.getHistory());
 
         System.out.println("Список задач.");
         System.out.println(tasksManager.getAllTask());

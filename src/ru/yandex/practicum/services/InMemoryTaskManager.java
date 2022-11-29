@@ -1,18 +1,27 @@
-package ru.yandex.practicum.service;
+package ru.yandex.practicum.services;
 
+import ru.yandex.practicum.common.Managers;
 import ru.yandex.practicum.common.TaskStatus;
 import ru.yandex.practicum.entities.Epic;
 import ru.yandex.practicum.entities.SubTask;
 import ru.yandex.practicum.entities.Task;
+import ru.yandex.practicum.interfaces.HistoryManager;
+import ru.yandex.practicum.interfaces.TaskManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class TasksManager {
+public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epicTasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HistoryManager historyManager;
     private int generatedId = 0;
+
+    public InMemoryTaskManager() {
+        historyManager = Managers.getDefaultHistory();
+    }
 
     private void updateEpicTaskStatus(Epic epic) {
         if (epicTasks.containsKey(epic.getId())) {
@@ -53,6 +62,7 @@ public class TasksManager {
     /**
      * Создаёт задачу.
      */
+    @Override
     public int createTask(Task task) {
         int newId = generateId();
         task.setId(newId);
@@ -64,6 +74,7 @@ public class TasksManager {
     /**
      * Создаёт эпик.
      */
+    @Override
     public int createEpicTask(Epic epicTask) {
         int newId = generateId();
         epicTask.setId(newId);
@@ -75,6 +86,7 @@ public class TasksManager {
     /**
      * Создаёт подзадачу.
      */
+    @Override
     public int createSubTask(SubTask subTask) {
         int newId = generateId();
         subTask.setId(newId);
@@ -95,6 +107,7 @@ public class TasksManager {
     /**
      * Получает список всех задачь.
      */
+    @Override
     public ArrayList<Task> getAllTask() {
         if(tasks.isEmpty()) {
             System.out.println("Список задач пуст.");
@@ -106,6 +119,7 @@ public class TasksManager {
     /**
      * Получает список всех эпиков.
      */
+    @Override
     public ArrayList<Epic> getAllEpicTask() {
         if(epicTasks.isEmpty()) {
             System.out.println("Список эпиков пуст.");
@@ -117,6 +131,7 @@ public class TasksManager {
     /**
      * Получает список всех подзадач.
      */
+    @Override
     public ArrayList<SubTask> getAllSubTask() {
         if (subTasks.isEmpty()) {
             System.out.println("Список подзадач пуст.");
@@ -128,6 +143,7 @@ public class TasksManager {
     /**
      * Получает список подчазачь эпика.
      */
+    @Override
     public ArrayList<SubTask> getAllSubTaskByEpicId(int id) {
         ArrayList<SubTask> subTasksForEpic = new ArrayList<>();
 
@@ -148,27 +164,40 @@ public class TasksManager {
     /**
      * Получает задачу по id.
      */
+    @Override
     public Task getTaskById(int id) {
-        return tasks.get(id);
+        Task task = tasks.get(id);
+        historyManager.add(task);
+
+        return task;
     }
 
     /**
      * Получает эпик по id.
      */
+    @Override
     public Epic getEpicTaskById(int id) {
-        return epicTasks.get(id);
+        Epic epic = epicTasks.get(id);
+        historyManager.add(epic);
+
+        return epic;
     }
 
     /**
      * Получает подзадачу по id.
      */
+    @Override
     public SubTask getSubTaskById(int id) {
-        return subTasks.get(id);
+        SubTask subTask = subTasks.get(id);
+        historyManager.add(subTask);
+
+        return subTask;
     }
 
     /**
      * Обновляет задачу.
      */
+    @Override
     public void updateTask(Task task) {
         if (task != null) {
             int id = task.getId();
@@ -186,6 +215,7 @@ public class TasksManager {
     /**
      * Обновляет эпик.
      */
+    @Override
     public void updateEpicTask(Epic epicTask) {
         if (epicTask != null) {
             int id = epicTask.getId();
@@ -204,6 +234,7 @@ public class TasksManager {
     /**
      * Обновляет подзадачу.
      */
+    @Override
     public void updateSubTask(SubTask subTask) {
         if (subTask != null) {
             int id = subTask.getId();
@@ -223,6 +254,7 @@ public class TasksManager {
     /**
      * Удаляет все задачи.
      */
+    @Override
     public void deleteAllTasks() {
         tasks.clear();
     }
@@ -230,6 +262,7 @@ public class TasksManager {
     /**
      * Удаляет все эпики.
      */
+    @Override
     public void deleteAllEpicTasks() {
         epicTasks.clear();
         subTasks.clear();
@@ -238,6 +271,7 @@ public class TasksManager {
     /**
      * Удаляет все подзадачи.
      */
+    @Override
     public void deleteAllSubTasks() {
         subTasks.clear();
 
@@ -251,6 +285,7 @@ public class TasksManager {
     /**
      * Удаляет задачу по id.
      */
+    @Override
     public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
@@ -262,6 +297,7 @@ public class TasksManager {
     /**
      * Удаляет эпик по id.
      */
+    @Override
     public void deleteEpicTaskById(int id) {
         if (epicTasks.containsKey(id)) {
             ArrayList<Integer> subTasksIds = epicTasks.get(id).getSubTaskIds();
@@ -279,6 +315,7 @@ public class TasksManager {
     /**
      * Удаляет подзадачу по id.
      */
+    @Override
     public void deleteSubTaskById(Integer id) {
         if (subTasks.containsKey(id)) {
             SubTask subTask = subTasks.get(id);
@@ -295,4 +332,12 @@ public class TasksManager {
             System.out.println("Подзадача не найдена!");
         }
     }
+
+    /**
+     * Получает историю просмотров задач.
+     */
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    };
 }
