@@ -338,6 +338,12 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public List<Task> getHistory() {
-        return historyManager.getHistory();
+        List<Task> history = historyManager.getHistory();
+
+        if (history.isEmpty()) {
+            System.out.print("История просмотров пуста.");
+        }
+
+        return history;
     };
 }

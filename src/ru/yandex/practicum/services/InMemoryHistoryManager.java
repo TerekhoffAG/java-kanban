@@ -3,12 +3,12 @@ package ru.yandex.practicum.services;
 import ru.yandex.practicum.entities.Task;
 import ru.yandex.practicum.interfaces.HistoryManager;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int MAX_TASKS = 10;
-    private final List<Task> historyTasks = new ArrayList<>();
+    private final LinkedList<Task> historyTasks = new LinkedList<>();
 
     /**
      * Добавляет задачу в историю просмотров.
@@ -17,7 +17,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         if (task != null) {
             if (historyTasks.size() >= MAX_TASKS) {
-                historyTasks.remove(0);
+                historyTasks.removeFirst();
             }
             historyTasks.add(task);
         }
@@ -28,9 +28,6 @@ public class InMemoryHistoryManager implements HistoryManager {
      */
     @Override
     public List<Task> getHistory() {
-        if (historyTasks.isEmpty()) {
-            System.out.print("История просмотров пуста.");
-        }
         return historyTasks;
     }
 }
