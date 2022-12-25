@@ -56,6 +56,7 @@ public class Main {
         tasksManager.getSubTaskById(6);
         tasksManager.getSubTaskById(5);
         tasksManager.getSubTaskById(7);
+        tasksManager.getSubTaskById(5);
         System.out.println("#########################");
         System.out.println("История просмотров задач.");
         System.out.println(tasksManager.getHistory());
@@ -81,6 +82,18 @@ public class Main {
         System.out.println(tasksManager.getEpicTaskById(3));
         System.out.println("Список подзадач эпика 1.");
         System.out.println(tasksManager.getAllSubTaskByEpicId(3));
+
+        System.out.println("#########################");
+        System.out.println("История просмотров задач.");
+        System.out.println(tasksManager.getHistory());
+        System.out.println("#########################");
+
+        System.out.println("Удаление всех задач.");
+        tasksManager.deleteAllTasks();
+        System.out.println("Удаление всех эпиков.");
+        tasksManager.deleteAllEpicTasks();
+        System.out.println("Удаление всех подзадач.");
+        tasksManager.deleteAllSubTasks();
 
         System.out.println("#########################");
         System.out.println("История просмотров задач.");
