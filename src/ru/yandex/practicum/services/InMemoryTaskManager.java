@@ -59,6 +59,17 @@ public class InMemoryTaskManager implements TaskManager {
         return ++generatedId;
     }
 
+    protected void setGeneratedId(int id) {
+        this.generatedId = id;
+    }
+
+    /**
+     * Получает эпик по id, без сохранения в историю просмотров.
+     */
+    protected Epic getEpicNoHistory(int id) {
+        return epicTasks.get(id);
+    }
+
     /**
      * Создаёт задачу.
      */
@@ -105,12 +116,42 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
+     * Добавляет задачу.
+     */
+    @Override
+    public void addTask(Task task) {
+        int id = task.getId();
+        tasks.put(id, task);
+    }
+
+    /**
+     * Добавляет эпик.
+     */
+    @Override
+    public void addEpic(Epic epic) {
+        int id = epic.getId();
+        epicTasks.put(id, epic);
+    }
+
+    /**
+     * Добавляет подзадачу.
+     */
+    @Override
+    public void addSubTask(SubTask subTask) {
+        int id = subTask.getId();
+        subTasks.put(id, subTask);
+        Epic epic = epicTasks.get(subTask.getEpicTaskId());
+        epic.addSubTaskId(id);
+    }
+
+    /**
      * Получает список всех задачь.
      */
     @Override
     public ArrayList<Task> getAllTask() {
         if(tasks.isEmpty()) {
             System.out.println("Список задач пуст.");
+            return new ArrayList<>();
         }
 
         return new ArrayList<>(tasks.values());
@@ -123,6 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Epic> getAllEpicTask() {
         if(epicTasks.isEmpty()) {
             System.out.println("Список эпиков пуст.");
+            return new ArrayList<>();
         }
 
         return new ArrayList<>(epicTasks.values());
@@ -135,6 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<SubTask> getAllSubTask() {
         if (subTasks.isEmpty()) {
             System.out.println("Список подзадач пуст.");
+            return new ArrayList<>();
         }
 
         return new ArrayList<>(subTasks.values());
@@ -355,6 +398,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
+     * Добавляет задачи в историю простотра по id.
+     */
+    @Override
+    public void addHistory(int id) {
+        if (tasks.containsKey(id)) {
+            historyManager.add(tasks.get(id));
+        } else if (epicTasks.containsKey(id)) {
+            historyManager.add(epicTasks.get(id));
+        } else if (subTasks.containsKey(id)) {
+            historyManager.add(subTasks.get(id));
+        }
+    }
+
+    /**
      * Получает историю просмотров задач.
      */
     @Override
@@ -367,4 +424,12 @@ public class InMemoryTaskManager implements TaskManager {
 
         return history;
     };
+
+    /**
+     * Получает инстанцию класса HistoryManager.
+     */
+    @Override
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
 }

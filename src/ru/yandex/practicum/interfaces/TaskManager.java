@@ -4,7 +4,6 @@ import ru.yandex.practicum.entities.Epic;
 import ru.yandex.practicum.entities.SubTask;
 import ru.yandex.practicum.entities.Task;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,21 @@ public interface TaskManager {
      * Создаёт подзадачу.
      */
     int createSubTask(SubTask subTask);
+
+    /**
+     * Добавляет задачу.
+     */
+    void addTask(Task task);
+
+    /**
+     * Добавляет эпик.
+     */
+    void addEpic(Epic epicTask);
+
+    /**
+     * Добавляет подзадачу.
+     */
+    void addSubTask(SubTask subTask);
 
     /**
      * Получает список всех задачь.
@@ -106,7 +120,17 @@ public interface TaskManager {
     void deleteSubTaskById(Integer id);
 
     /**
+     * Добавляет задачи в историю простотра по id.
+     */
+    void addHistory(int id);
+
+    /**
      * Получает историю просмотров задач.
      */
     List<Task> getHistory();
+
+    /**
+     * Получает инстанс менеджера истории.
+     */
+    HistoryManager getHistoryManager();
 }

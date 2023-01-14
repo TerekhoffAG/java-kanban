@@ -1,6 +1,9 @@
 # IDE
 .idea/
 
+# Project exclude paths
+out/
+
 # Compiled class file
 *.class
 
