@@ -7,6 +7,7 @@ import ru.yandex.practicum.entities.SubTask;
 import ru.yandex.practicum.entities.Task;
 import ru.yandex.practicum.services.FileBackedTasksManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class Main {
 /////////////////////////////////////////////////////////////////////////////////////
 // TODO: Закоментировать весь код при загрузке данных из файла ./resources/task.csv
 /////////////////////////////////////////////////////////////////////////////////////
-        FileBackedTasksManager tasksManager = new FileBackedTasksManager();
+        File file = new File("resources/task.csv");
+        FileBackedTasksManager tasksManager = new FileBackedTasksManager(file);
 
         System.out.println("Создание 2-х задач.");
         tasksManager.createTask(new Task("задача 1", TaskType.TASK, TaskStatus.NEW, "описание задачи 1"));
