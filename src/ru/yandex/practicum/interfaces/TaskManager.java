@@ -133,4 +133,9 @@ public interface TaskManager {
      * Получает инстанс менеджера истории.
      */
     HistoryManager getHistoryManager();
+
+    /**
+     * Получает список задач в порядке приоритета.
+     */
+    List<Task> getPrioritizedTasks();
 }

@@ -3,17 +3,18 @@ package ru.yandex.practicum.entities;
 import ru.yandex.practicum.common.TaskStatus;
 import ru.yandex.practicum.common.TaskType;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class Epic extends Task{
     private final ArrayList<Integer> subTaskIds = new ArrayList<>();
 
     public Epic(String name, String description) {
-        super(name, TaskType.EPIC, TaskStatus.NEW, description);
+        super(name, TaskType.EPIC, TaskStatus.NEW, description, 0L, null);
     }
 
-    public Epic(int id, String name, String description, ArrayList<Integer> ids) {
-        super(id, name, TaskType.EPIC, TaskStatus.NEW, description);
+    public Epic(int id, String name, String description, long duration, Instant startTime, ArrayList<Integer> ids) {
+        super(id, name, TaskType.EPIC, TaskStatus.NEW, description, duration, startTime);
         subTaskIds.addAll(ids);
     }
 
@@ -39,6 +40,8 @@ public class Epic extends Task{
                 ", type=" + type +
                 ", status=" + status +
                 ", description='" + description + '\'' +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
                 '}';
     }
 }

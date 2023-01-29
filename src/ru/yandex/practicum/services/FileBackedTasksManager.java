@@ -10,12 +10,15 @@ import ru.yandex.practicum.interfaces.HistoryManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager{
     private File file;
-    private static final String FILE_HEADER = "id,type,name,status,description,epic" + System.lineSeparator();
+    private static final String FILE_HEADER = "id,type,name,status,description,epic,duration,startTime"
+            + System.lineSeparator();
 
     public FileBackedTasksManager(File file) {
         super();
@@ -32,7 +35,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 task.getType().name(),
                 task.getName(),
                 task.getStatus().name(),
-                task.getDescription()
+                task.getDescription(),
+                Long.toString(task.getDuration()),
+                String.valueOf(task.getStartTime())
         );
 
         return line + getEpicIdBySubTask(task) + System.lineSeparator();
@@ -47,6 +52,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 : ",";
     }
 
+    private Instant parseStrInDate (String str) {
+        try {
+            return Instant.parse(str);
+        } catch (DateTimeParseException exception) {
+            return null;
+        }
+    }
+
     /**
      * Представляет строку задачи в виде сущности.
      */
@@ -58,20 +71,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         String name = properties[2];
         TaskStatus status = TaskStatus.valueOf(properties[3]);
         String description = properties[4];
+        long duration = Long.parseLong(properties[5]);
+        Instant startTime =  parseStrInDate(properties[6]);
         setGeneratedId(id);
 
         switch (type) {
             case TASK:
-                result = new Task(id, name, type, status, description);
+                result = new Task(id, name, type, status, description, duration, startTime);
                 break;
             case EPIC:
                 result = new Epic(name, description);
                 result.setId(id);
                 result.setStatus(status);
+                result.setDuration(duration);
+                result.setStartTime(startTime);
                 break;
             case SUBTASK:
-                int epicId = Integer.parseInt(properties[5]);
-                result = new SubTask(id, name, status, description, epicId);
+                int epicId = Integer.parseInt(properties[7]);
+                result = new SubTask(id, name, status, description, duration, startTime, epicId);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -172,21 +189,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 } else {
                     fileBackedTasksManager.addTask(task);
                 }
-
-                switch (task.getType()) {
-                    case TASK:
-                        fileBackedTasksManager.addTask(task);
-                    case EPIC:
-                        fileBackedTasksManager.addTask(task);
-                    case SUBTASK:
-                        fileBackedTasksManager.addTask(task);
-                }
             }
 
             String line = br.readLine();
-            if (!line.isEmpty()) {
-                for (int id : historyFromString(line)) {
-                    fileBackedTasksManager.addHistory(id);
+            if (line != null) {
+                if (!line.isEmpty()) {
+                    for (int id : historyFromString(line)) {
+                        fileBackedTasksManager.addHistory(id);
+                    }
                 }
             }
 
@@ -302,19 +312,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 /////////////////////////////////////////////////////////////////////////////
 // TODO: Раскоментировать при загрузке данных из файла ./resources/task.csv
 /////////////////////////////////////////////////////////////////////////////
-//        File file = new File("resources/task.csv");
-//        FileBackedTasksManager tasksManager = loadFromFile(file);
-//
-//        System.out.println("#########################");
-//        System.out.println("История просмотров задач.");
-//        System.out.println(tasksManager.getHistory());
-//        System.out.println("#########################");
-//
-//        System.out.println("Список задач.");
-//        System.out.println(tasksManager.getAllTask());
-//        System.out.println("Список эпиков.");
-//        System.out.println(tasksManager.getAllEpicTask());
-//        System.out.println("Список подзадач.");
-//        System.out.println(tasksManager.getAllSubTask());
+        File file = new File("resources/task.csv");
+        FileBackedTasksManager tasksManager = loadFromFile(file);
+
+        System.out.println("#########################");
+        System.out.println("История просмотров задач.");
+        System.out.println(tasksManager.getHistory());
+        System.out.println("#########################");
+
+        System.out.println("Список задач.");
+        System.out.println(tasksManager.getAllTask());
+        System.out.println("Список эпиков.");
+        System.out.println(tasksManager.getAllEpicTask());
+        System.out.println("Список подзадач.");
+        System.out.println(tasksManager.getAllSubTask());
+
+        System.out.println("#########################");
+        System.out.println("Список задач в порядке приоритета.");
+        System.out.println(tasksManager.getPrioritizedTasks());
+        System.out.println("#########################");
     }
 }
