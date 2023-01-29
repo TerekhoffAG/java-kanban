@@ -312,24 +312,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
 /////////////////////////////////////////////////////////////////////////////
 // TODO: Раскоментировать при загрузке данных из файла ./resources/task.csv
 /////////////////////////////////////////////////////////////////////////////
-        File file = new File("resources/task.csv");
-        FileBackedTasksManager tasksManager = loadFromFile(file);
-
-        System.out.println("#########################");
-        System.out.println("История просмотров задач.");
-        System.out.println(tasksManager.getHistory());
-        System.out.println("#########################");
-
-        System.out.println("Список задач.");
-        System.out.println(tasksManager.getAllTask());
-        System.out.println("Список эпиков.");
-        System.out.println(tasksManager.getAllEpicTask());
-        System.out.println("Список подзадач.");
-        System.out.println(tasksManager.getAllSubTask());
-
-        System.out.println("#########################");
-        System.out.println("Список задач в порядке приоритета.");
-        System.out.println(tasksManager.getPrioritizedTasks());
-        System.out.println("#########################");
+//        File file = new File("resources/task.csv");
+//        FileBackedTasksManager tasksManager = loadFromFile(file);
+//
+//        System.out.println("#########################");
+//        System.out.println("История просмотров задач.");
+//        System.out.println(tasksManager.getHistory());
+//        System.out.println("#########################");
+//
+//        System.out.println("Список задач.");
+//        System.out.println(tasksManager.getAllTask());
+//        System.out.println("Список эпиков.");
+//        System.out.println(tasksManager.getAllEpicTask());
+//        System.out.println("Список подзадач.");
+//        System.out.println(tasksManager.getAllSubTask());
+//
+//        System.out.println("#########################");
+//        System.out.println("Список задач в порядке приоритета.");
+//        System.out.println(tasksManager.getPrioritizedTasks());
+//        System.out.println("#########################");
     }
 }
