@@ -25,21 +25,6 @@ public interface TaskManager {
     int createSubTask(SubTask subTask);
 
     /**
-     * Добавляет задачу.
-     */
-    void addTask(Task task);
-
-    /**
-     * Добавляет эпик.
-     */
-    void addEpic(Epic epicTask);
-
-    /**
-     * Добавляет подзадачу.
-     */
-    void addSubTask(SubTask subTask);
-
-    /**
      * Получает список всех задачь.
      */
     ArrayList<Task> getAllTask();

@@ -98,18 +98,21 @@ public class InMemoryTaskManager implements TaskManager {
      */
     private boolean checkTaskCrossingRange(Task checkTask) {
         if (checkTask.getStartTime() != null) {
+            int checkId = checkTask.getId();
             List<Task> tasksList = getPrioritizedTasks();
 
             long checkStartTime = checkTask.getStartTime().toEpochMilli();
             long checkEndTime = checkTask.getEndTime().toEpochMilli();
 
             for (Task task : tasksList) {
-                if (task.getStartTime() != null) {
-                    long startTime = task.getStartTime().toEpochMilli();
-                    long endTime = task.getEndTime().toEpochMilli();
+                if (checkId != task.getId()) {
+                    if (task.getStartTime() != null) {
+                        long startTime = task.getStartTime().toEpochMilli();
+                        long endTime = task.getEndTime().toEpochMilli();
 
-                    if ((checkEndTime >= startTime) && (checkStartTime <= endTime)) {
-                        return false;
+                        if ((checkEndTime >= startTime) && (checkStartTime <= endTime)) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -127,6 +130,36 @@ public class InMemoryTaskManager implements TaskManager {
      */
     protected Epic getEpicNoHistory(int id) {
         return epicTasks.get(id);
+    }
+
+    /**
+     * Добавляет задачу.
+     */
+    protected void addTask(Task task) {
+        int id = task.getId();
+        tasks.put(id, task);
+
+        addPrioritizedTask(task);
+    }
+
+    /**
+     * Добавляет эпик.
+     */
+    protected void addEpic(Epic epic) {
+        int id = epic.getId();
+        epicTasks.put(id, epic);
+    }
+
+    /**
+     * Добавляет подзадачу.
+     */
+    protected void addSubTask(SubTask subTask) {
+        int id = subTask.getId();
+        subTasks.put(id, subTask);
+        addPrioritizedTask(subTask);
+
+        Epic epic = epicTasks.get(subTask.getEpicTaskId());
+        epic.addSubTaskId(id);
     }
 
     /**
@@ -186,39 +219,6 @@ public class InMemoryTaskManager implements TaskManager {
 
         System.out.println("В заданное время назначено выполнение другой под/задачи.");
         return -1;
-    }
-
-    /**
-     * Добавляет задачу.
-     */
-    @Override
-    public void addTask(Task task) {
-        int id = task.getId();
-        tasks.put(id, task);
-
-        addPrioritizedTask(task);
-    }
-
-    /**
-     * Добавляет эпик.
-     */
-    @Override
-    public void addEpic(Epic epic) {
-        int id = epic.getId();
-        epicTasks.put(id, epic);
-    }
-
-    /**
-     * Добавляет подзадачу.
-     */
-    @Override
-    public void addSubTask(SubTask subTask) {
-        int id = subTask.getId();
-        subTasks.put(id, subTask);
-        addPrioritizedTask(subTask);
-
-        Epic epic = epicTasks.get(subTask.getEpicTaskId());
-        epic.addSubTaskId(id);
     }
 
     /**
