@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-    public static final Path path = Path.of("test.csv");
-    File file = new File(String.valueOf(path));
+    protected static final Path path = Path.of("test.csv");
+    protected File file = new File(String.valueOf(path));
 
     @BeforeEach
     public void beforeEach() {

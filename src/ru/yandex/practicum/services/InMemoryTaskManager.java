@@ -12,7 +12,6 @@ import java.time.Instant;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    static final int MILLI_IN_MINUTE = 60000;
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epicTasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
@@ -62,11 +61,13 @@ public class InMemoryTaskManager implements TaskManager {
         List<SubTask> subTaskList = getAllSubTaskByEpicId(epic.getId());
         Instant startTime = Instant.MAX;
         Instant endTime = Instant.MIN;
+        long durationEpic = 0L;
 
         for(SubTask subTask : subTaskList) {
             Instant subTaskStartTime = subTask.getStartTime();
             if (subTaskStartTime != null) {
                 Instant subTaskEndTime = subTask.getEndTime();
+                durationEpic += subTask.getDuration();
 
                 if (subTaskStartTime.isBefore(startTime)) {
                     startTime = subTaskStartTime;
@@ -78,7 +79,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         if (startTime != Instant.MAX) {
-            epic.setDuration((endTime.toEpochMilli() - startTime.toEpochMilli()) / MILLI_IN_MINUTE);
+            epic.setDuration(durationEpic);
             epic.setStartTime(startTime);
         }
     }
