@@ -78,9 +78,10 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        if (startTime != Instant.MAX) {
+        if ((startTime != Instant.MAX) && (endTime != Instant.MIN)) {
             epic.setDuration(durationEpic);
             epic.setStartTime(startTime);
+            epic.setEndTime(endTime);
         }
     }
 
