@@ -23,6 +23,10 @@ public class Epic extends Task{
         subTaskIds.add(id);
     }
 
+    public void clearSubTaskIds() {
+        subTaskIds.clear();
+    }
+
     public void setSubTaskIds(ArrayList<Integer> ids) {
         subTaskIds.clear();
         subTaskIds.addAll(ids);

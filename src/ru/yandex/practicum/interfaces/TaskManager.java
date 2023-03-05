@@ -105,7 +105,7 @@ public interface TaskManager {
     void deleteSubTaskById(Integer id);
 
     /**
-     * Добавляет задачи в историю простотра по id.
+     * Добавляет задачи в историю просмотра по id.
      */
     void addHistory(int id);
 
