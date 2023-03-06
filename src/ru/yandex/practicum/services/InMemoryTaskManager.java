@@ -433,7 +433,7 @@ public class InMemoryTaskManager implements TaskManager {
             idsList.clear();
             epicTask.setStatus(TaskStatus.NEW);
             epicTask.setDuration(0L);
-            epicTask.setStartTime(Instant.MIN);
+            epicTask.setStartTime(null);
         }
 
         subTasks.clear();

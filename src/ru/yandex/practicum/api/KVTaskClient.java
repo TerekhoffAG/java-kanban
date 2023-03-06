@@ -10,11 +10,11 @@ import java.nio.charset.StandardCharsets;
 
 public class KVTaskClient {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private final String apiToken;
+    private String apiToken = "";
     private final String url;
 
     public KVTaskClient(String serverURL) {
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
         this.url = serverURL;
         URI uri = URI.create(this.url + "/register");
         HttpRequest request = HttpRequest.newBuilder()
@@ -26,14 +26,18 @@ public class KVTaskClient {
         HttpClient client = HttpClient.newHttpClient();
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                this.apiToken = response.body();
+            } else {
+                System.out.println("Ошибка с запросом на сервер. Код состояния: " + response.statusCode());
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        this.apiToken = response.body();
     }
 
     public void put(String key, String json) {
+        HttpResponse<String> response;
         URI uri = URI.create(this.url + "/save/" + key + "?API_TOKEN=" + this.apiToken);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -45,7 +49,12 @@ public class KVTaskClient {
         HttpClient client = HttpClient.newHttpClient();
 
         try {
-            client.send(request, HttpResponse.BodyHandlers.ofString(DEFAULT_CHARSET));
+            response = client.send(request, HttpResponse.BodyHandlers.ofString(DEFAULT_CHARSET));
+            if (response.statusCode() == 200) {
+                System.out.println("Успешно обновлены данные на сервере.");
+            } else {
+                System.out.println("Ошибка с запросом на сервер. Код состояния: " + response.statusCode());
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,6 +73,11 @@ public class KVTaskClient {
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString(DEFAULT_CHARSET));
+            if (response.statusCode() == 200) {
+                System.out.println("Успешно загружены данные с сервера.");
+            } else {
+                System.out.println("Ошибка с запросом на сервер. Код состояния: " + response.statusCode());
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

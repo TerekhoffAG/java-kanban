@@ -2,13 +2,13 @@ package ru.yandex.practicum.api;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-        import java.io.IOException;
-        import java.net.InetSocketAddress;
-        import java.util.HashMap;
-        import java.util.Map;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
-        import com.sun.net.httpserver.HttpExchange;
-        import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
@@ -31,29 +31,29 @@ public class KVServer {
         try {
             System.out.println("\n/load");
             if (!hasAuth(h)) {
-                h.sendResponseHeaders(403, 0);
                 System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                h.sendResponseHeaders(403, 0);
                 return;
             }
             if ("GET".equals(h.getRequestMethod())) {
                 String key = h.getRequestURI().getPath().substring("/load/".length());
                 if (key.isEmpty()) {
-                    h.sendResponseHeaders(400, 0);
                     System.out.println("Key отсутствует в запросе. Key указывается в пути: /load/{key}");
+                    h.sendResponseHeaders(400, 0);
                     return;
                 }
                 if (data.get(key) == null) {
+                    System.out.println("Отсутствуют данные по ключу " + key);
                     String response = "Отсутствуют данные по ключу " + key;
                     sendText(h, response, 400);
-                    System.out.println("Отсутствуют данные по ключу " + key);
                     return;
                 }
                 String response = data.get(key);
                 sendText(h, response, 200);
                 System.out.println("Значение для ключа " + key + " успешно отправлено!");
             } else {
-                h.sendResponseHeaders(405, 0);
                 System.out.println("/load ожидает GET-запрос, а получен: " + h.getRequestMethod());
+                h.sendResponseHeaders(405, 0);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
